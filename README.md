@@ -1,4 +1,4 @@
-# RLA Agent
+# RLI Agent
 
 Multi-agent system for AI-powered **3D modeling** and **video generation** using Claude Agent SDK.
 
