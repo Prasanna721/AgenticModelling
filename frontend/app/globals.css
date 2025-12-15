@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* Industrial Control Panel - Dark Theme */
+:root {
+  /* Core Palette */
+  --background: #08090a;
+  --background-elevated: #111214;
+  --background-subtle: #191b1e;
+  --background-active: #1e2023;
+
+  /* Text Hierarchy */
+  --foreground: #e8e9ea;
+  --foreground-muted: #9ca3af;
+  --foreground-subtle: #6b7280;
+
+  /* Borders */
+  --border: #2a2d31;
+  --border-subtle: #1f2225;
+  --border-focus: #3d4147;
+
+  /* Accent - Industrial Orange */
+  --accent: #FF4400;
+  --accent-glow: rgba(255, 68, 0, 0.15);
+  --accent-dim: rgba(255, 68, 0, 0.08);
+
+  /* Status Indicators */
+  --status-pending: #4b5563;
+  --status-running: #FF4400;
+  --status-complete: #10b981;
+  --status-error: #ef4444;
+
+  /* Status Backgrounds (subtle tints) */
+  --status-pending-bg: rgba(75, 85, 99, 0.08);
+  --status-running-bg: rgba(255, 68, 0, 0.06);
+  --status-complete-bg: rgba(16, 185, 129, 0.06);
+  --status-error-bg: rgba(239, 68, 68, 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar - Industrial Style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-focus);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-glow);
+  color: var(--foreground);
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* React Flow - Industrial Override */
+.react-flow__node {
+  cursor: default !important;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2px;
+}
+
+.react-flow__background {
+  background: var(--background) !important;
+}
+
+.react-flow__controls {
+  background: var(--background-elevated) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.react-flow__controls-button {
+  background: var(--background-elevated) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  fill: var(--foreground-muted) !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--background-active) !important;
+  fill: var(--foreground) !important;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__minimap {
+  background: var(--background-elevated) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+}
+
+.react-flow__minimap-mask {
+  fill: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Industrial Grid Pattern */
+.industrial-grid {
+  background-image:
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Glow Effects */
+.glow-running {
+  box-shadow:
+    0 0 0 1px var(--status-running),
+    0 0 20px var(--accent-glow),
+    inset 0 0 20px var(--accent-dim);
+}
+
+.glow-complete {
+  box-shadow:
+    0 0 0 1px var(--status-complete),
+    0 0 12px rgba(16, 185, 129, 0.15);
+}
+
+.glow-error {
+  box-shadow:
+    0 0 0 1px var(--status-error),
+    0 0 12px rgba(239, 68, 68, 0.15);
+}
+
+/* Status Indicator Pulse */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pulse-live {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+/* Scan Line Effect (optional industrial touch) */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 68, 0, 0.03),
+    transparent
+  );
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Utility Classes */
+.text-accent { color: var(--accent); }
+.bg-elevated { background: var(--background-elevated); }
+.border-default { border-color: var(--border); }

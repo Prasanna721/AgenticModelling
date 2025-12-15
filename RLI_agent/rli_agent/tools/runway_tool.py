@@ -4,7 +4,7 @@ import os
 import json
 import time
 from runwayml import RunwayML
-from claude_code_sdk import tool
+from claude_agent_sdk import tool
 
 from .firebase_tool import upload_to_firebase, download_file_bytes
 

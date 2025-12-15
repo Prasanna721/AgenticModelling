@@ -3,7 +3,7 @@
 import os
 import json
 import fal_client
-from claude_code_sdk import tool
+from claude_agent_sdk import tool
 
 from .firebase_tool import upload_to_firebase, download_file_bytes
 

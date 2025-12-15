@@ -5,7 +5,7 @@ import json
 
 from google import genai
 from google.genai.types import GenerateContentConfig
-from claude_code_sdk import tool
+from claude_agent_sdk import tool
 
 from .firebase_tool import upload_to_firebase
 

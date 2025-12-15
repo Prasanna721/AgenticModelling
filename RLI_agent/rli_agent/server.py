@@ -145,25 +145,12 @@ class RLIAgentWebSocketServer:
         """Run the agent session with error handling."""
         try:
             # Import here to avoid circular imports
-            from rli_agent.agent import process_request
+            from rli_agent.agent import process_request_with_events
 
-            # Emit session started
-            await emitter.session_started(request['task_brief'][:100])
+            # Run agent with event streaming - this emits all events internally
+            final_url = await process_request_with_events(request, emitter)
 
-            start_time = datetime.now()
-            result = await process_request(request)
-            duration_ms = int((datetime.now() - start_time).total_seconds() * 1000)
-
-            # Emit session complete
-            await emitter.session_complete(
-                final_url=result.get('deliverables', {}).get('3d_model') or
-                          result.get('deliverables', {}).get('video') or
-                          result.get('deliverables', {}).get('image'),
-                duration_ms=duration_ms,
-                summary=result
-            )
-
-            logger.info(f"Session {client.session_id} completed: {result.get('deliverables')}")
+            logger.info(f"Session {client.session_id} completed: {final_url}")
 
         except asyncio.CancelledError:
             logger.info(f"Session {client.session_id} was cancelled")
