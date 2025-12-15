@@ -1,4 +1,4 @@
-# RLI Execution Plan
+# RLI Execution Plan: Ring Redesign with Marquise-Cut Diamond
 
 ## Task Analysis
 - Request Summary: Modify existing ring design by replacing emerald-cut diamond with marquise-cut diamond, maintain all other design elements, render images in two metal variations (rose gold and yellow gold), and create 3D model file
@@ -11,7 +11,7 @@
   - Yellow gold side angle view (JPEG 1280x1280 pixels)
 
 ## Reference Assets
-- Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577
+- Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5
 - Analysis: Original ring with emerald-cut diamond center stone with weight, size, and specifications. Band and setting style to be maintained while diamond shape changed to marquise-cut.
 
 ## Input Assets
@@ -26,36 +26,36 @@
 **Step 1: Image Generator (Rose Gold - Front View)**
 - Task: Generate rose gold ring with marquise-cut diamond (front view)
 - Input:
-  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577
+  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5
   - Modification: Replace emerald-cut diamond with marquise-cut diamond
-  - Prompt: "Create a rose gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond. Studio lighting, white background, front view, jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
+  - Prompt: "Create a rose gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond. Studio lighting, white background, front view, jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
 - Expected Output: Rose gold ring front view image URL (JPEG)
 - Output ID: IMAGE-001
 
 **Step 2: Image Generator (Rose Gold - Side View)**
 - Task: Generate rose gold ring with marquise-cut diamond (side angle view)
 - Input:
-  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577
+  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5
   - Modification: Replace emerald-cut diamond with marquise-cut diamond
-  - Prompt: "Create a rose gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond. Studio lighting, white background, side angle view (45 degrees), jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
+  - Prompt: "Create a rose gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond. Studio lighting, white background, side angle view (45 degrees), jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
 - Expected Output: Rose gold ring side view image URL (JPEG)
 - Output ID: IMAGE-002
 
 **Step 3: Image Generator (Yellow Gold - Front View)**
 - Task: Generate yellow gold ring with marquise-cut diamond (front view)
 - Input:
-  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577
+  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5
   - Modification: Replace emerald-cut diamond with marquise-cut diamond, change metal to yellow gold
-  - Prompt: "Create a yellow gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond and change metal to yellow gold. Studio lighting, white background, front view, jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
+  - Prompt: "Create a yellow gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond and change metal to yellow gold. Studio lighting, white background, front view, jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
 - Expected Output: Yellow gold ring front view image URL (JPEG)
 - Output ID: IMAGE-003
 
 **Step 4: Image Generator (Yellow Gold - Side View)**
 - Task: Generate yellow gold ring with marquise-cut diamond (side angle view)
 - Input:
-  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577
+  - Reference URL: https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5
   - Modification: Replace emerald-cut diamond with marquise-cut diamond, change metal to yellow gold
-  - Prompt: "Create a yellow gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765762588591_ringdetails.png?alt=media&token=d4be7491-ce40-45af-9928-45974e1f5577, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond and change metal to yellow gold. Studio lighting, white background, side angle view (45 degrees), jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
+  - Prompt: "Create a yellow gold engagement ring with a marquise-cut diamond center stone. Based on the reference design at https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.firebasestorage.app/o/attachments%2F1765764221342_ringdetails.png?alt=media&token=48778f4f-ac73-47cf-afb5-be79db06bbf5, maintain all band and setting details but replace the emerald-cut diamond with a marquise-cut diamond and change metal to yellow gold. Studio lighting, white background, side angle view (45 degrees), jewelry photography, professional gem lighting, 1280x1280 pixels, high detail, sharp focus"
 - Expected Output: Yellow gold ring side view image URL (JPEG)
 - Output ID: IMAGE-004
 
