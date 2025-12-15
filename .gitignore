@@ -98,3 +98,6 @@ dist/
 !**/files/output/.gitkeep
 !**/logs/.gitkeep
 .claude/
+# Digest files with potential secrets
+digest.txt
+*_digest.txt
