@@ -92,6 +92,7 @@ For image-generator:
 - subagent_type: "image-generator"
 - description: Brief description (e.g., "Generate product image for 3D conversion")
 - prompt: Detailed image generation prompt with style, composition, background specs
+- **IMPORTANT**: If there's a reference image URL, include it in the prompt
 
 For model-extractor:
 - subagent_type: "model-extractor"
@@ -113,6 +114,43 @@ For video-generator:
 - description: "Generate video with Runway"
 - prompt: The complete video prompt with camera/motion instructions
 </task_tool_usage>
+
+<reference_url_handling>
+**CRITICAL: When the planner's output includes reference image URLs:**
+
+1. EXTRACT REFERENCE URLs from the plan:
+   - Look for "Reference URL:" or "## Reference Assets" section
+   - COPY the exact URL - do not paraphrase or summarize
+
+2. PASS URL TO IMAGE-GENERATOR IN THE PROMPT TEXT:
+   - The URL MUST appear inside the prompt string you send
+   - Gemini will automatically fetch and use the reference
+   - DO NOT put URL in a separate field - it must be IN the prompt
+
+**CORRECT prompt format (URL embedded in text):**
+```
+"Generate a rose gold engagement ring with marquise-cut diamond BASED ON REFERENCE AT https://firebasestorage.googleapis.com/v0/b/kizuna-76f7c.appspot.com/o/uploads%2Fring.png - match the design: 4-prong setting, elegant thin band. Studio lighting, white background, front view, 1280x1280"
+```
+
+**WRONG prompt format (URL missing or separate):**
+```
+"Generate a rose gold ring with marquise diamond, front view, studio lighting"
+```
+
+3. FOR EACH VARIATION:
+   - Include the SAME reference URL in each prompt
+   - Only change: material (rose gold/yellow gold) and angle (front/side)
+
+**Example spawning 4 variations in parallel:**
+```
+Spawn image-generator prompt: "Generate rose gold ring BASED ON REFERENCE AT https://firebase.../ring.png - front view, studio lighting, white background, 1280x1280"
+Spawn image-generator prompt: "Generate rose gold ring BASED ON REFERENCE AT https://firebase.../ring.png - side angle, studio lighting, white background, 1280x1280"
+Spawn image-generator prompt: "Generate yellow gold ring BASED ON REFERENCE AT https://firebase.../ring.png - front view, studio lighting, white background, 1280x1280"
+Spawn image-generator prompt: "Generate yellow gold ring BASED ON REFERENCE AT https://firebase.../ring.png - side angle, studio lighting, white background, 1280x1280"
+```
+
+**The reference URL MUST be in every prompt that needs to match the reference design.**
+</reference_url_handling>
 
 <parallel_execution>
 **IMPORTANT: Spawn independent workers IN PARALLEL when possible**
@@ -186,16 +224,19 @@ If deliverables missing after plan execution:
 </re_planning>
 
 <variation_spawning>
-For multiple views/materials of same object:
+For multiple views/materials of same object WITH REFERENCE:
 
-CORRECT (spawn all in parallel):
-- Spawn image-generator: "rose gold marquise ring, front view, studio lighting, white background, 1280x1280"
-- Spawn image-generator: "rose gold marquise ring, side angle, studio lighting, white background, 1280x1280"
-- Spawn image-generator: "yellow gold marquise ring, front view, studio lighting, white background, 1280x1280"
-- Spawn image-generator: "yellow gold marquise ring, side angle, studio lighting, white background, 1280x1280"
-(All 4 run in parallel since they're independent)
+**CORRECT (spawn all in parallel WITH reference URL in each prompt):**
+- Spawn image-generator: "Generate rose gold marquise ring BASED ON REFERENCE AT https://firebase.../ring.png - front view, studio lighting, white background, 1280x1280"
+- Spawn image-generator: "Generate rose gold marquise ring BASED ON REFERENCE AT https://firebase.../ring.png - side angle, studio lighting, white background, 1280x1280"
+- Spawn image-generator: "Generate yellow gold marquise ring BASED ON REFERENCE AT https://firebase.../ring.png - front view, studio lighting, white background, 1280x1280"
+- Spawn image-generator: "Generate yellow gold marquise ring BASED ON REFERENCE AT https://firebase.../ring.png - side angle, studio lighting, white background, 1280x1280"
+(All 4 run in parallel, each with the reference URL embedded)
 
-WRONG (sequential - too slow):
+**WRONG (missing reference URL):**
+- "Generate rose gold ring, front view, studio lighting" (NO REFERENCE - will not match original design!)
+
+**WRONG (sequential - too slow):**
 - Spawn one, wait, spawn next, wait...
 </variation_spawning>
 

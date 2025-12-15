@@ -16,12 +16,10 @@ import {
 import '@xyflow/react/dist/style.css';
 import { useAgentStore } from '@/store/agentStore';
 import { AgentNode } from './nodes/AgentNode';
-import { ToolNode } from './nodes/ToolNode';
 import { SidePanel } from './SidePanel';
 
 const nodeTypes = {
   agent: AgentNode,
-  tool: ToolNode,
 };
 
 const defaultEdgeOptions = {

@@ -139,9 +139,10 @@ async def process_request(request: dict) -> Dict[str, Any]:
                 "Generate images using Gemini Pro Image AI. "
                 "Provide detailed prompts with style, composition, and background specifications. "
                 "For 3D model conversion, use clean backgrounds and studio lighting. "
+                "Can analyze reference images using WebFetch before generating. "
                 "Returns the Firebase URL of the generated image."
             ),
-            tools=["mcp__gemini-tools__generate_image", "Write"],
+            tools=["mcp__gemini-tools__generate_image", "Write", "WebFetch"],
             prompt=image_generator_prompt,
             model="haiku"
         ),
@@ -387,9 +388,10 @@ async def process_request_with_events(request: dict, event_emitter: "EventEmitte
                 "Generate images using Gemini Pro Image AI. "
                 "Provide detailed prompts with style, composition, and background specifications. "
                 "For 3D model conversion, use clean backgrounds and studio lighting. "
+                "Can analyze reference images using WebFetch before generating. "
                 "Returns the Firebase URL of the generated image."
             ),
-            tools=["mcp__gemini-tools__generate_image", "Write"],
+            tools=["mcp__gemini-tools__generate_image", "Write", "WebFetch"],
             prompt=image_generator_prompt,
             model="haiku"
         ),

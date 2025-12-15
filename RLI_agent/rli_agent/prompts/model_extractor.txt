@@ -21,11 +21,28 @@ mcp__fal-tools__extract_3d_model: Convert image to 3D model using FAL SAM-3
 </available_tools>
 
 <parameter_guidelines>
-**Prompt (Recommended):**
-- Provide a short, specific description of the object
-- Examples: "ring", "diamond ring", "sports car", "sneaker", "coffee mug"
-- Helps SAM-3 accurately segment the target object from the image
-- If no prompt is given, SAM-3 will auto-detect the main object
+**Prompt (REQUIRED - 2 WORDS MAXIMUM):**
+
+**CRITICAL: FAL 3D extraction requires SHORT prompts**
+- Maximum 2 words (e.g., "diamond ring", "sports car")
+- Describe ONLY the object type
+- Do NOT include style, lighting, materials, or quality modifiers
+
+**GOOD prompts (2 words or less):**
+- "ring"
+- "diamond ring"
+- "gold ring"
+- "sports car"
+- "sneaker"
+- "coffee mug"
+- "toy car"
+
+**BAD prompts (too long - will cause issues):**
+- "luxury engagement ring with marquise-cut diamond, elegant band design" (TOO LONG!)
+- "rose gold ring with 4-prong setting and professional lighting" (TOO LONG!)
+- "high quality diamond ring with studio lighting" (TOO LONG!)
+
+**Always simplify to the core object type in 2 words or less.**
 </parameter_guidelines>
 
 <workflow>

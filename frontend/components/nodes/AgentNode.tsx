@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import {
   Brain,
@@ -12,15 +12,22 @@ import {
   Scissors,
   Type,
   Bot,
-  Loader2
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  Wrench,
+  Check,
+  X,
+  Clock,
 } from 'lucide-react';
-import type { AgentStatus } from '@/types/agent';
+import type { AgentStatus, ToolCall } from '@/types/agent';
 
 interface AgentNodeData {
   label: string;
   agentType: string;
   description: string;
   status: AgentStatus;
+  toolCalls?: ToolCall[];
 }
 
 const AGENT_ICONS: Record<string, React.ReactNode> = {
@@ -73,9 +80,24 @@ const STATUS_STYLES: Record<AgentStatus, {
   },
 };
 
+// Tool status icon helper
+function ToolStatusIcon({ status }: { status: AgentStatus }) {
+  switch (status) {
+    case 'running':
+      return <Loader2 className="w-3 h-3 text-[#FF4400] animate-spin" />;
+    case 'complete':
+      return <Check className="w-3 h-3 text-[#10b981]" />;
+    case 'error':
+      return <X className="w-3 h-3 text-[#ef4444]" />;
+    default:
+      return <Clock className="w-3 h-3 text-[#6b7280]" />;
+  }
+}
+
 function AgentNodeComponent({ data }: NodeProps) {
   const nodeData = data as unknown as AgentNodeData;
-  const { label, agentType, description, status } = nodeData;
+  const { label, agentType, description, status, toolCalls } = nodeData;
+  const [toolsExpanded, setToolsExpanded] = useState(false);
 
   const icon = AGENT_ICONS[agentType?.toLowerCase()] || <Bot className="w-4 h-4" />;
   const styles = STATUS_STYLES[status] || STATUS_STYLES.pending;
@@ -137,6 +159,45 @@ function AgentNodeComponent({ data }: NodeProps) {
           </p>
         )}
       </div>
+
+      {/* Tools Section (collapsible) */}
+      {toolCalls && toolCalls.length > 0 && (
+        <div className="border-t border-[#2a2d31]">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setToolsExpanded(!toolsExpanded);
+            }}
+            className="w-full px-4 py-2 flex items-center justify-between text-[10px] hover:bg-[#191b1e] transition-colors"
+          >
+            <span className="flex items-center gap-2 uppercase tracking-wider text-[#6b7280]">
+              <Wrench className="w-3 h-3" />
+              Tools ({toolCalls.length})
+            </span>
+            {toolsExpanded ? (
+              <ChevronUp className="w-3 h-3 text-[#6b7280]" />
+            ) : (
+              <ChevronDown className="w-3 h-3 text-[#6b7280]" />
+            )}
+          </button>
+
+          {toolsExpanded && (
+            <div className="px-4 py-2 space-y-1.5 max-h-40 overflow-y-auto bg-[#0a0b0c]">
+              {toolCalls.map((tool) => (
+                <div
+                  key={tool.id}
+                  className="flex items-center justify-between text-xs py-1.5 px-2 bg-[#111214] rounded"
+                >
+                  <span className="text-[#9ca3af] truncate max-w-[180px]" title={tool.toolName}>
+                    {tool.toolName.replace(/^mcp__[\w-]+__/, '')}
+                  </span>
+                  <ToolStatusIcon status={tool.status} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Status Bar (bottom accent) */}
       <div className={`h-1 ${styles.indicator} opacity-60`} />

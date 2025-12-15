@@ -137,6 +137,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
           agentType: data.agent_type,
           description: data.description,
           status: 'running' as AgentStatus,
+          toolCalls: [],  // Initialize empty tool calls array
         },
       };
 
@@ -168,26 +169,9 @@ export const useAgentStore = create<AgentState>((set, get) => ({
 
   startToolCall: (data: ToolCallStartData) => {
     set((state) => {
-      const nodeId = `tool-${data.tool_use_id}`;
+      const agentNodeId = `agent-${data.agent_id}`;
 
-      // Find the agent's column and add tool to a column to the right
-      const agent = state.agents.get(data.agent_id);
-      const agentColumn = agent ? getAgentColumn(agent.type) : 2;
-      const toolColumn = agentColumn + 0.5; // Place between agent columns
-
-      // Count existing tools for this agent to determine row
-      const existingToolsForAgent = Array.from(state.toolCalls.values()).filter(
-        (t) => t.agentId === data.agent_id
-      ).length;
-
-      const agentNode = state.nodes.find((n) => n.id === `agent-${data.agent_id}`);
-      const baseY = agentNode ? agentNode.position.y : START_Y;
-
-      const position = {
-        x: START_X + toolColumn * COLUMN_X_OFFSET,
-        y: baseY + existingToolsForAgent * 100,
-      };
-
+      // Create tool call object for store
       const toolCall: ToolCall = {
         id: data.tool_use_id,
         agentId: data.agent_id,
@@ -201,110 +185,78 @@ export const useAgentStore = create<AgentState>((set, get) => ({
         timestamp: new Date().toISOString(),
       };
 
-      const node: Node = {
-        id: nodeId,
-        type: 'tool',
-        position,
-        data: {
-          toolName: data.tool_name,
-          status: 'running' as AgentStatus,
-          input: data.tool_input_summary,
-          inputUrls: data.input_urls,
-          output: null,
-          outputUrl: null,
-        },
-      };
-
-      // Create edges
-      const newEdges: Edge[] = [];
-
-      // Edge from parent agent
-      newEdges.push({
-        id: `edge-agent-${data.agent_id}-tool-${data.tool_use_id}`,
-        source: `agent-${data.agent_id}`,
-        target: nodeId,
-        animated: true,
-        style: { stroke: '#FF4400', strokeWidth: 2 },
-      });
-
-      // Dependency edges from input URLs
-      for (const url of data.input_urls) {
-        const sourceNodeId = state.urlToNodeId.get(url);
-        if (sourceNodeId) {
-          newEdges.push({
-            id: `edge-dep-${sourceNodeId}-${nodeId}`,
-            source: sourceNodeId,
-            target: nodeId,
-            style: { stroke: '#22c55e', strokeWidth: 2, strokeDasharray: '5,5' },
-            label: 'data',
-            labelStyle: { fill: '#737373', fontSize: 10 },
-          });
-        }
-      }
-
-      const newToolCalls = new Map(state.toolCalls);
-      newToolCalls.set(data.tool_use_id, toolCall);
-
-      return {
-        toolCalls: newToolCalls,
-        nodes: [...state.nodes, node],
-        edges: [...state.edges, ...newEdges],
-      };
-    });
-  },
-
-  completeToolCall: (data: ToolCallCompleteData) => {
-    set((state) => {
-      const nodeId = `tool-${data.tool_use_id}`;
-      const status: AgentStatus = data.success ? 'complete' : 'error';
-
-      // Update tool call
-      const newToolCalls = new Map(state.toolCalls);
-      const toolCall = newToolCalls.get(data.tool_use_id);
-      if (toolCall) {
-        newToolCalls.set(data.tool_use_id, {
-          ...toolCall,
-          status,
-          output: data.result,
-          outputUrl: data.result_url,
-          error: data.error,
-        });
-      }
-
-      // Update node
+      // Update agent node's data to include this tool call (embed tools in agent)
       const nodes = state.nodes.map((node) => {
-        if (node.id === nodeId) {
-          const outputId = data.result_url ? generateOutputId(data.tool_name, data.result_url) : null;
+        if (node.id === agentNodeId) {
+          const existingTools = (node.data as any).toolCalls || [];
           return {
             ...node,
             data: {
               ...node.data,
-              status,
-              output: data.result,
-              outputUrl: data.result_url,
-              outputId,
-              error: data.error,
+              toolCalls: [...existingTools, toolCall],
             },
           };
         }
         return node;
       });
 
-      // Update edges (remove animation)
-      const edges = state.edges.map((edge) => {
-        if (edge.target === nodeId && edge.animated) {
-          return { ...edge, animated: false };
-        }
-        return edge;
-      });
+      const newToolCalls = new Map(state.toolCalls);
+      newToolCalls.set(data.tool_use_id, toolCall);
 
-      // Track output URL for dependencies
-      const urlToNodeId = new Map(state.urlToNodeId);
-      if (data.result_url) {
-        urlToNodeId.set(data.result_url, nodeId);
+      // DON'T create separate tool node or edges - tools are embedded in agent node
+      return {
+        toolCalls: newToolCalls,
+        nodes,
+      };
+    });
+  },
+
+  completeToolCall: (data: ToolCallCompleteData) => {
+    set((state) => {
+      const status: AgentStatus = data.success ? 'complete' : 'error';
+
+      // Update tool call in store
+      const newToolCalls = new Map(state.toolCalls);
+      const toolCall = newToolCalls.get(data.tool_use_id);
+
+      if (toolCall) {
+        const updatedToolCall: ToolCall = {
+          ...toolCall,
+          status,
+          output: data.result,
+          outputUrl: data.result_url,
+          error: data.error,
+        };
+        newToolCalls.set(data.tool_use_id, updatedToolCall);
+
+        // Update the tool call in the agent node's embedded data
+        const nodes = state.nodes.map((node) => {
+          const nodeTools = (node.data as any).toolCalls as ToolCall[] | undefined;
+          if (nodeTools?.some((t) => t.id === data.tool_use_id)) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                toolCalls: nodeTools.map((t) =>
+                  t.id === data.tool_use_id ? updatedToolCall : t
+                ),
+              },
+            };
+          }
+          return node;
+        });
+
+        // Track output URL for dependencies (use agent node id)
+        const urlToNodeId = new Map(state.urlToNodeId);
+        if (data.result_url) {
+          const agentNodeId = `agent-${toolCall.agentId}`;
+          urlToNodeId.set(data.result_url, agentNodeId);
+        }
+
+        return { toolCalls: newToolCalls, nodes, urlToNodeId };
       }
 
-      return { toolCalls: newToolCalls, nodes, edges, urlToNodeId };
+      return { toolCalls: newToolCalls };
     });
   },
 
